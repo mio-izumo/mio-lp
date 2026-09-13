@@ -656,10 +656,7 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
 
 </div>
 
-<!-- 追従ボタン -->
-<div class="mio-float" id="mio-float">
-  <a class="mio-cta" href="https://lin.ee/tlTM2Vw">澪の無料霊視を受け取る</a>
-</div>
+<!-- 追従ボタン：2026-09-14 上司指示で削除（リストの質対策＝読了した人だけを最終CTAに到達させる） -->
 
 <script>
 (function(){
@@ -682,26 +679,6 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
     }, 1200);
   });
 
-  var floatBtn = document.getElementById('mio-float');
-  var s4 = document.getElementById('mio-s6');
-  var lastCta = document.getElementById('mio-last-cta');
-  var s4Reached = false;
-  var lastVisible = false;
-  function update(){
-    floatBtn.classList.toggle('mio-float--on', s4Reached && !lastVisible);
-  }
-  new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      s4Reached = e.isIntersecting || e.boundingClientRect.top < 0;
-      update();
-    });
-  }, {threshold: 0}).observe(s4);
-  new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      lastVisible = e.isIntersecting;
-      update();
-    });
-  }, {threshold: 0.1}).observe(lastCta);
 
   Array.prototype.forEach.call(document.querySelectorAll('.mio-cta'), function(a){
     a.addEventListener('click', function(){
