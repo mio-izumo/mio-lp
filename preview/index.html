@@ -313,43 +313,46 @@ img.mio-img-err{visibility:hidden}
   text-align:center;
 }
 
-/* ============ ⑤ お受け取りになった方から ============ */
+/* ============ ⑤ お受け取りになった方から（2026-09-16 横スワイプ化・声3→5件） ============ */
 .mio-s5{padding-top:100px;padding-bottom:96px}
-.mio-voice{margin-top:56px;position:relative}
-.mio-voice+.mio-voice{margin-top:72px}
-.mio-voice-label{
-  writing-mode:vertical-rl;
-  position:absolute;
-  right:0;
-  top:0;
-  z-index:2;
-  font-size:13px;
-  letter-spacing:.22em;
-  color:var(--mio-gold);
-  border-right:1px solid rgba(231,194,75,.35);
-  padding-right:10px;
-  height:auto;
-}
-.mio-voice-quote{
-  font-size:18px;
-  font-weight:500;
-  line-height:1.9;
-  letter-spacing:.06em;
-  padding-right:48px;
-  min-height:200px;
+.mio-vrail{
   display:flex;
-  align-items:center;
+  gap:14px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  margin:44px -28px 0; /* .mio-innerの28pxを突き抜けて全幅＝次カードの見切れがスワイプの合図 */
+  padding:0 28px 6px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
-.mio-voice-shot{
-  margin-top:24px;
-  width:100%;
-  padding:10px;
+.mio-vrail::-webkit-scrollbar{display:none}
+.mio-vcard{
+  flex:0 0 82%;
+  scroll-snap-align:center;
   background:rgba(240,232,216,.045);
   border:1px solid rgba(240,232,216,.12);
   border-radius:12px;
+  padding:20px 16px 16px;
 }
+.mio-voice-label{
+  display:inline-block;
+  font-size:12px;
+  letter-spacing:.2em;
+  color:var(--mio-gold);
+  border-bottom:1px solid rgba(231,194,75,.35);
+  padding-bottom:6px;
+  margin-bottom:12px;
+}
+.mio-voice-quote{
+  font-size:15px;
+  font-weight:500;
+  line-height:1.9;
+  letter-spacing:.05em;
+  min-height:62px;
+}
+.mio-voice-shot{margin-top:12px}
 .mio-voice-shot img{width:100%;height:auto;display:block;border-radius:6px}
-.mio-s5 .mio-note{margin-top:52px}
+.mio-s5 .mio-note{margin-top:32px}
 
 /* ============ ⑥ どう変わるか ============ */
 .mio-s6{position:relative;padding-bottom:118px}
@@ -376,6 +379,10 @@ img.mio-img-err{visibility:hidden}
 .mio-s7 .mio-promise+.mio-promise{margin-top:44px}
 .mio-s7 .mio-h2{margin-bottom:40px}
 .mio-s7 .mio-body+.mio-body{margin-top:26px} /* 弾A・正直ブロック（2026-09-16） */
+.mio-s7 .mio-price{margin-top:26px;letter-spacing:.08em} /* 本鑑定の価格（2026-09-16 本人指示・二重価格） */
+.mio-price-old{color:var(--mio-sub);font-size:14px;text-decoration:line-through;margin-right:12px}
+.mio-price-arrow{color:var(--mio-sub);font-size:13px;margin-right:12px}
+.mio-price-now{color:var(--mio-gold);font-size:21px;font-weight:500;letter-spacing:.06em}
 .mio-promise-title{
   font-size:17px;
   font-weight:500;
@@ -614,25 +621,39 @@ fbq('track', 'PageView');
   <section class="mio-s5 mio-inner" id="mio-s5">
     <h2 class="mio-h2 mio-h2--fit mio-fade">お受け取りになった方から</h2>
 
-    <div class="mio-voice mio-fade">
-      <span class="mio-voice-label">誰にも言えなかったこと</span>
-      <p class="mio-voice-quote"><span><span class="mio-nb">「もう限界だと、</span><span class="mio-nb">誰にも言えないままでした」</span></span></p>
-      <div class="mio-voice-shot"><img src="img/voice1.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+    <div class="mio-vrail mio-fade">
+      <div class="mio-vcard">
+        <span class="mio-voice-label">誰にも言えなかったこと</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「もう限界だと、</span><span class="mio-nb">誰にも言えないままでした」</span></p>
+        <div class="mio-voice-shot"><img src="img/voice1.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">これから先のこと</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「20年張り詰めていた</span><span class="mio-nb">肩の力が、</span><span class="mio-nb">すっと抜けました」</span></p>
+        <div class="mio-voice-shot"><img src="img/voice2.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">ご縁のこと</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「5年しんどかった関係が、</span><span class="mio-nb">自然とほどけていきました」</span></p>
+        <div class="mio-voice-shot"><img src="img/voice3.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">ご家族のこと</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「止まっていた全部が、</span><span class="mio-nb">動き始めました」</span></p>
+        <div class="mio-voice-shot"><img src="img/voice4.png" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">申し込んだ日の夜に</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「まだ鑑定前なのに、</span><span class="mio-nb">気持ちが落ち着いたんです」</span></p>
+        <div class="mio-voice-shot"><img src="img/voice5.png" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
     </div>
 
-    <div class="mio-voice mio-fade">
-      <span class="mio-voice-label">これから先のこと</span>
-      <p class="mio-voice-quote"><span><span class="mio-nb">「20年張り詰めていた</span><span class="mio-nb">肩の力が、</span><span class="mio-nb">すっと抜けました」</span></span></p>
-      <div class="mio-voice-shot"><img src="img/voice2.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
-    </div>
-
-    <div class="mio-voice mio-fade">
-      <span class="mio-voice-label">ご縁のこと</span>
-      <p class="mio-voice-quote"><span><span class="mio-nb">「5年しんどかった関係が、</span><span class="mio-nb">自然とほどけていきました」</span></span></p>
-      <div class="mio-voice-shot"><img src="img/voice3.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
-    </div>
-
-    <p class="mio-note mio-fade"><span class="mio-nb">※実際に無料霊視を</span><span class="mio-nb">お受け取りになった方より、</span><span class="mio-nb">掲載の許可をいただいて</span><span class="mio-nb">紹介しています。</span></p>
+    <p class="mio-note mio-fade"><span class="mio-nb">※実際に</span><span class="mio-nb">お受け取りになった方より、</span><span class="mio-nb">掲載の許可をいただいて</span><span class="mio-nb">紹介しています。</span></p>
   </section>
 
   <!-- どう変わるか -->
@@ -675,6 +696,7 @@ fbq('track', 'PageView');
       <h2 class="mio-h2 mio-h2--fit mio-h2--fit14 mio-fade">先に、正直にお伝えしておきます</h2>
       <p class="mio-body mio-fade"><span class="mio-nb">無料霊視で視られるのは、</span><br><span class="mio-nb">いま巡っている流れの</span><span class="mio-nb">「入口」までです。</span></p>
       <p class="mio-body mio-fade"><span class="mio-nb">その先を深く視る本鑑定は、</span><br><span class="mio-nb">有料でお受けしています。</span></p>
+      <p class="mio-price mio-fade"><span class="mio-nb"><span class="mio-price-old">19,800円</span><span class="mio-price-arrow">→</span>いまは <span class="mio-price-now">9,800円</span></span></p>
       <p class="mio-body mio-fade"><span class="mio-nb">無料の範囲だけでも、</span><span class="mio-nb">受け取る意味はあります。</span></p>
       <p class="mio-body mio-fade"><span class="mio-nb">ただ、話のタネにという方には、</span><br><span class="mio-nb">向いていないかもしれません。</span></p>
     </div>
