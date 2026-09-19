@@ -327,7 +327,7 @@ img.mio-img-err{visibility:hidden}
 }
 .mio-vrail::-webkit-scrollbar{display:none}
 .mio-vcard{
-  flex:0 0 82%;
+  flex:0 0 86%; /* 9/19 40代以上の可読性＝カード・中のスクショを一回り大きく（見切れは維持） */
   scroll-snap-align:center;
   background:rgba(240,232,216,.045);
   border:1px solid rgba(240,232,216,.12);
@@ -336,15 +336,15 @@ img.mio-img-err{visibility:hidden}
 }
 .mio-voice-label{
   display:inline-block;
-  font-size:12px;
-  letter-spacing:.2em;
+  font-size:13px;
+  letter-spacing:.12em; /* 9/19 フック昇格＝1行に収めたまま一回り大きく */
   color:var(--mio-gold);
   border-bottom:1px solid rgba(231,194,75,.35);
   padding-bottom:6px;
   margin-bottom:12px;
 }
 .mio-voice-quote{
-  font-size:15px;
+  font-size:16px; /* 9/19 40代以上の可読性（design-rules: 本文16px以上） */
   font-weight:500;
   line-height:1.9;
   letter-spacing:.05em;
@@ -640,13 +640,13 @@ fbq('track', 'PageView');
 
       <div class="mio-vcard">
         <span class="mio-voice-label">会うたび笑って、帰りは泣いてた</span>
-        <p class="mio-voice-quote"><span class="mio-nb">「怖がってたものは、</span><span class="mio-nb">自分の頭の中にしか</span><span class="mio-nb">なかったんです」</span></p>
+        <p class="mio-voice-quote"><span class="mio-nb">「怖がってたものは、</span><span class="mio-nb">頭の中にしかなかった」</span></p>
         <div class="mio-voice-shot"><img src="img/koe4.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
       </div>
 
       <div class="mio-vcard">
         <span class="mio-voice-label">能力じゃなくて、記憶のせいだった</span>
-        <p class="mio-voice-quote"><span class="mio-nb">「ずっと自分で</span><span class="mio-nb">ブレーキかけてたのは、</span><span class="mio-nb">私でした」</span></p>
+        <p class="mio-voice-quote"><span class="mio-nb">「ずっとブレーキ</span><span class="mio-nb">かけてたのは、私でした」</span></p>
         <div class="mio-voice-shot"><img src="img/koe5.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
       </div>
 
