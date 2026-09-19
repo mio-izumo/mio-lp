@@ -336,7 +336,7 @@ img.mio-img-err{visibility:hidden}
 }
 .mio-voice-label{
   display:inline-block;
-  font-size:13px;
+  font-size:clamp(12px, 3.35vw, 13px); /* 375px端末でも最長ラベル17字が1行に収まる */
   letter-spacing:.12em; /* 9/19 フック昇格＝1行に収めたまま一回り大きく */
   color:var(--mio-gold);
   border-bottom:1px solid rgba(231,194,75,.35);
