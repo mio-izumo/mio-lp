@@ -106,6 +106,14 @@ a{color:inherit;text-decoration:none}
   letter-spacing:.12em;
   margin-top:12px;
 }
+.mio-cta-sub{ /* ボタン内2行目＝スクリーニングの一言（2026-09-16 本人指定／同夜「主文の0.7倍」指示で13pxへ） */
+  display:block;
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:.12em;
+  margin-top:8px;
+  opacity:.95;
+}
 
 /* ============ 写真（裁ち落とし・墨に溶かす） ============ */
 .mio-photo{position:relative;background:var(--mio-ph);overflow:hidden}
@@ -151,13 +159,13 @@ img.mio-img-err{visibility:hidden}
   line-height:1;
   margin:0 -28px;
 }
-.mio-fv-t1{
+.mio-fv-t1{ /* 2026-09-16 STEP2：主役を「出雲式」に＝タダより先に本物感（サイズのみ・文言不変） */
   display:block;
-  font-size:clamp(26px, 8.8vw, 38px);
-  letter-spacing:.6em;
-  text-indent:.6em;
+  font-size:clamp(38px, 12.6vw, 54px);
+  letter-spacing:.5em;
+  text-indent:.5em;
   color:var(--mio-gold);
-  margin-bottom:20px;
+  margin-bottom:18px;
   text-shadow:0 1px 12px rgba(18,16,19,.8);
 }
 .mio-fv-t2{
@@ -305,43 +313,46 @@ img.mio-img-err{visibility:hidden}
   text-align:center;
 }
 
-/* ============ ⑤ お受け取りになった方から ============ */
+/* ============ ⑤ お受け取りになった方から（2026-09-16 横スワイプ化・声3→5件） ============ */
 .mio-s5{padding-top:100px;padding-bottom:96px}
-.mio-voice{margin-top:56px;position:relative}
-.mio-voice+.mio-voice{margin-top:72px}
-.mio-voice-label{
-  writing-mode:vertical-rl;
-  position:absolute;
-  right:0;
-  top:0;
-  z-index:2;
-  font-size:13px;
-  letter-spacing:.22em;
-  color:var(--mio-gold);
-  border-right:1px solid rgba(231,194,75,.35);
-  padding-right:10px;
-  height:auto;
-}
-.mio-voice-quote{
-  font-size:18px;
-  font-weight:500;
-  line-height:1.9;
-  letter-spacing:.06em;
-  padding-right:48px;
-  min-height:200px;
+.mio-vrail{
   display:flex;
-  align-items:center;
+  gap:14px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  margin:44px -28px 0; /* .mio-innerの28pxを突き抜けて全幅＝次カードの見切れがスワイプの合図 */
+  padding:0 28px 6px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
-.mio-voice-shot{
-  margin-top:24px;
-  width:100%;
-  padding:10px;
+.mio-vrail::-webkit-scrollbar{display:none}
+.mio-vcard{
+  flex:0 0 86%; /* 9/19 40代以上の可読性＝カード・中のスクショを一回り大きく（見切れは維持） */
+  scroll-snap-align:center;
   background:rgba(240,232,216,.045);
   border:1px solid rgba(240,232,216,.12);
   border-radius:12px;
+  padding:20px 16px 16px;
 }
+.mio-voice-label{
+  display:inline-block;
+  font-size:clamp(12px, 3.35vw, 13px); /* 375px端末でも最長ラベル17字が1行に収まる */
+  letter-spacing:.12em; /* 9/19 フック昇格＝1行に収めたまま一回り大きく */
+  color:var(--mio-gold);
+  border-bottom:1px solid rgba(231,194,75,.35);
+  padding-bottom:6px;
+  margin-bottom:12px;
+}
+.mio-voice-quote{
+  font-size:16px; /* 9/19 40代以上の可読性（design-rules: 本文16px以上） */
+  font-weight:500;
+  line-height:1.9;
+  letter-spacing:.05em;
+  min-height:62px;
+}
+.mio-voice-shot{margin-top:12px}
 .mio-voice-shot img{width:100%;height:auto;display:block;border-radius:6px}
-.mio-s5 .mio-note{margin-top:52px}
+.mio-s5 .mio-note{margin-top:32px}
 
 /* ============ ⑥ どう変わるか ============ */
 .mio-s6{position:relative;padding-bottom:118px}
@@ -366,6 +377,12 @@ img.mio-img-err{visibility:hidden}
 .mio-s7{padding-top:120px;padding-bottom:120px}
 .mio-s7 .mio-promise{margin-top:56px}
 .mio-s7 .mio-promise+.mio-promise{margin-top:44px}
+.mio-s7 .mio-h2{margin-bottom:40px}
+.mio-s7 .mio-body+.mio-body{margin-top:26px} /* 弾A・正直ブロック（2026-09-16） */
+.mio-s7 .mio-price{margin-top:26px;letter-spacing:.08em} /* 本鑑定の価格（2026-09-16 本人指示・二重価格） */
+.mio-price-old{color:var(--mio-sub);font-size:16px;text-decoration:line-through;margin-right:12px}
+.mio-price-arrow{color:var(--mio-sub);font-size:14px;margin-right:12px}
+.mio-price-now{color:var(--mio-gold);font-size:27px;font-weight:500;letter-spacing:.06em}
 .mio-promise-title{
   font-size:17px;
   font-weight:500;
@@ -524,30 +541,28 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
     </div>
     <div class="mio-s3-text mio-inner">
       <h2 class="mio-h2 mio-fade">澪について</h2>
-      <!-- 物語型自己紹介（2026-09-15 上司指示・note原作をLP世界観に合わせて移植／同日「もう少し長く」で拡張第2版） -->
+      <!-- 物語型自己紹介（2026-09-15 上司指示・note原作／9-15「もう少し長く」拡張第2版／9-16 本人指示で密度圧縮版＝骨6章は維持・弱い行だけ削除） -->
       <div class="mio-body mio-fade">
         <p><span class="mio-nb">物心つく前から、</span><span class="mio-nb">人の後ろに</span><span class="mio-nb">「流れ」のようなものが</span><span class="mio-nb">視えておりました。</span></p>
-        <p><span class="mio-nb">嬉しいことがあった方は明るく、</span><br><span class="mio-nb">悲しみを抱えた方は、</span><span class="mio-nb">静かに沈んで視える。</span></p>
         <p><span class="mio-nb">それが誰にでも</span><span class="mio-nb">視えるものではないと</span><span class="mio-nb">知ったのは、</span><br><span class="mio-nb">学校で友人に伝えた</span><span class="mio-nb">日のことです。</span><br><span class="mio-nb">「先生のうしろ、</span><span class="mio-nb">今日はすごく暗いね」</span><br><span class="mio-nb">友人は目を丸くして、</span><span class="mio-nb">一歩あとずさりました。</span></p>
         <p><span class="mio-nb">——みんなには、</span><span class="mio-nb">視えていないのだ、と。</span></p>
       </div>
       <div class="mio-body mio-fade">
-        <p><span class="mio-nb">私の家は、九州で代々</span><span class="mio-nb">霊視を生業としてきた</span><span class="mio-nb">一族でした。</span><br><span class="mio-nb">祖母は幼い私を</span><span class="mio-nb">「歴代でも別格」と呼び、</span><br><span class="mio-nb">一族の期待を</span><span class="mio-nb">一身に受けて育ちました。</span></p>
+        <p><span class="mio-nb">私の家は、九州で代々</span><span class="mio-nb">霊視を生業としてきた</span><span class="mio-nb">一族でした。</span><br><span class="mio-nb">祖母は幼い私を</span><span class="mio-nb">「歴代でも別格」と呼びました。</span></p>
         <p><span class="mio-nb">年に一度、町の方々のために</span><span class="mio-nb">執り行われる一族の儀式が、</span><br><span class="mio-nb">幼い私の誇りでした。</span></p>
       </div>
       <div class="mio-body mio-fade">
-        <p><span class="mio-nb">けれど十歳の夜、</span><br><span class="mio-nb">その儀式が、</span><span class="mio-nb">町の方々のためではなく、</span><br><span class="mio-nb">力のあるひとりの方のためだけに</span><span class="mio-nb">行われていたことを</span><span class="mio-nb">知ってしまいました。</span></p>
-        <p><span class="mio-nb">「誰にも言ってはいけないよ」と</span><span class="mio-nb">父は言いました。</span><br><span class="mio-nb">その夜は布団の中で膝を抱えて、</span><span class="mio-nb">朝まで眠れませんでした。</span></p>
+        <p><span class="mio-nb">けれど十歳の夜、</span><br><span class="mio-nb">その儀式が、</span><span class="mio-nb">力のあるひとりの方のためだけに</span><span class="mio-nb">行われていたことを</span><span class="mio-nb">知ってしまいました。</span></p>
+        <p><span class="mio-nb">「誰にも言ってはいけないよ」と</span><span class="mio-nb">父は言いました。</span></p>
         <p><span class="mio-nb">視えてしまったものは、</span><span class="mio-nb">消せません。</span></p>
         <p><span class="mio-nb">——いつか一族を離れて、</span><br><span class="mio-nb">受け継いだこの力を、</span><span class="mio-nb">本来あるべき形で使おう。</span><br><span class="mio-nb">その決意が芽を出すまでに、</span><span class="mio-nb">八年かかりました。</span></p>
       </div>
       <div class="mio-body mio-fade">
         <p><span class="mio-nb">十八の春、</span><span class="mio-nb">荷物ひとつで家を出て、</span><br><span class="mio-nb">ご縁の結ばれる地・出雲へ</span><span class="mio-nb">渡りました。</span></p>
-        <p><span class="mio-nb">この地に立った瞬間、</span><br><span class="mio-nb">足の裏から穏やかな温もりが</span><span class="mio-nb">伝わってきたのを、</span><span class="mio-nb">いまも覚えています。</span><br><span class="mio-nb">——ここだ、と。</span></p>
+        <p><span class="mio-nb">この地に立った瞬間、</span><br><span class="mio-nb">足の裏から温もりが</span><span class="mio-nb">伝わってきたのを、</span><span class="mio-nb">いまも覚えています。</span><br><span class="mio-nb">——ここだ、と。</span></p>
       </div>
       <div class="mio-body mio-fade">
         <p><span class="mio-nb">それから二十年あまり。</span><br><span class="mio-nb">向き合ってきたご相談は、</span><span class="mio-nb"><span class="mio-num">10,000件</span>を超えました。</span></p>
-        <p><span class="mio-nb">人生が停滞していた方。</span><br><span class="mio-nb">選択を誤り続けていた方。</span><br><span class="mio-nb">自分の本音が</span><span class="mio-nb">分からなくなっていた方。</span><br><span class="mio-nb">涙も枯れるほど、</span><span class="mio-nb">行き詰まっていた方。</span></p>
         <p><span class="mio-nb">「鑑定のあと、</span><span class="mio-nb">運命の糸が変わった気がします」</span><br><span class="mio-nb">そう言っていただいたことが</span><span class="mio-nb">あります。</span><br><span class="mio-nb">けれど、私が変えたのでは</span><span class="mio-nb">ありません。</span><br><span class="mio-nb">その方が、本来選ぶべき流れに気づき、</span><br><span class="mio-nb">ご自身の意思で</span><span class="mio-nb">選び直された結果です。</span></p>
       </div>
       <div class="mio-body mio-fade">
@@ -604,27 +619,47 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
 
   <!-- お受け取りになった方から -->
   <section class="mio-s5 mio-inner" id="mio-s5">
-    <h2 class="mio-h2 mio-h2--fit mio-fade">お受け取りになった方から</h2>
+    <h2 class="mio-h2 mio-h2--fit mio-fade">鑑定を受けた方からの声</h2>
 
-    <div class="mio-voice mio-fade">
-      <span class="mio-voice-label">誰にも言えなかったこと</span>
-      <p class="mio-voice-quote"><span><span class="mio-nb">「もう限界だと、</span><span class="mio-nb">誰にも言えないままでした」</span></span></p>
-      <div class="mio-voice-shot"><img src="img/voice1.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+    <div class="mio-vrail mio-fade">
+      <div class="mio-vcard">
+        <span class="mio-voice-label">誰にも話してないのに、3秒で</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「信じてなくて</span><span class="mio-nb">すみませんって、</span><span class="mio-nb">謝りました」</span></p>
+        <div class="mio-voice-shot"><img src="img/koe1.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">夫婦の会話はあるのに、全部事務連絡</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「10年ぶりに、</span><span class="mio-nb">夫にコーヒー淹れたんです」</span></p>
+        <div class="mio-voice-shot"><img src="img/koe2.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">意地だけが残った親子</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「5年ぶりの、</span><span class="mio-nb">息子の言葉でした」</span></p>
+        <div class="mio-voice-shot"><img src="img/koe3.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">会うたび笑って、帰りは泣いてた</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「怖がってたものは、</span><span class="mio-nb">頭の中にしかなかった」</span></p>
+        <div class="mio-voice-shot"><img src="img/koe4.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">能力じゃなくて、記憶のせいだった</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「ずっとブレーキ</span><span class="mio-nb">かけてたのは、私でした」</span></p>
+        <div class="mio-voice-shot"><img src="img/koe5.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
+
+      <div class="mio-vcard">
+        <span class="mio-voice-label">毎晩3時に、目が覚める方</span>
+        <p class="mio-voice-quote"><span class="mio-nb">「一人じゃなかったんです」</span></p>
+        <div class="mio-voice-shot"><img src="img/koe6.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
+      </div>
     </div>
 
-    <div class="mio-voice mio-fade">
-      <span class="mio-voice-label">これから先のこと</span>
-      <p class="mio-voice-quote"><span><span class="mio-nb">「20年張り詰めていた</span><span class="mio-nb">肩の力が、</span><span class="mio-nb">すっと抜けました」</span></span></p>
-      <div class="mio-voice-shot"><img src="img/voice2.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
-    </div>
-
-    <div class="mio-voice mio-fade">
-      <span class="mio-voice-label">ご縁のこと</span>
-      <p class="mio-voice-quote"><span><span class="mio-nb">「5年しんどかった関係が、</span><span class="mio-nb">自然とほどけていきました」</span></span></p>
-      <div class="mio-voice-shot"><img src="img/voice3.jpg" alt="" onerror="this.classList.add('mio-img-err')"></div>
-    </div>
-
-    <p class="mio-note mio-fade"><span class="mio-nb">※実際に無料霊視を</span><span class="mio-nb">お受け取りになった方より、</span><span class="mio-nb">掲載の許可をいただいて</span><span class="mio-nb">紹介しています。</span></p>
+    <p class="mio-note mio-fade"><span class="mio-nb">※実際に</span><span class="mio-nb">お受け取りになった方より、</span><span class="mio-nb">掲載の許可をいただいて</span><span class="mio-nb">紹介しています。</span></p>
   </section>
 
   <!-- どう変わるか -->
@@ -661,6 +696,17 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
     </div>
   </section>
 
+  <!-- 弾A：有料の存在を正直に明記＝スクリーニング（2026-09-16 上司「LPのスクリーニングいいね」） -->
+  <section class="mio-s7" id="mio-s7">
+    <div class="mio-inner">
+      <h2 class="mio-h2 mio-h2--fit mio-h2--fit14 mio-fade">先に、正直にお伝えしておきます</h2>
+      <p class="mio-body mio-fade"><span class="mio-nb">無料霊視で視られるのは、</span><br><span class="mio-nb">いま巡っている流れの</span><span class="mio-nb">「入口」までです。</span></p>
+      <p class="mio-body mio-fade"><span class="mio-nb">その先を深く視る本鑑定は、</span><br><span class="mio-nb">有料でお受けしています。</span></p>
+      <p class="mio-price mio-fade"><span class="mio-nb"><span class="mio-price-old">19,800円</span><span class="mio-price-arrow">→</span>今だけ、<span class="mio-price-now">9,800円</span></span></p>
+      <p class="mio-body mio-fade"><span class="mio-nb">無料の範囲だけでも、</span><span class="mio-nb">受け取る意味はあります。</span></p>
+    </div>
+  </section>
+
   <!-- 最終CTA -->
   <section class="mio-s8" id="mio-s8">
     <div class="mio-s8-bg">
@@ -673,8 +719,7 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
         <p><span class="mio-nb">お一人ずつ視させていただくため、</span><span class="mio-nb">それ以上はお受けできません。</span></p>
         <p><span class="mio-nb">本日分が埋まった場合は、</span><span class="mio-nb">翌日以降のお届けとなります。</span></p>
       </div>
-      <a class="mio-cta" id="mio-last-cta" href="https://lin.ee/tlTM2Vw">澪の無料霊視を受け取る</a>
-      <p class="mio-cta-note">ご登録は無料です</p>
+      <a class="mio-cta" id="mio-last-cta" href="https://lin.ee/tlTM2Vw">澪の無料霊視を受け取る<span class="mio-cta-sub">※本気の方だけお進みください</span></a>
 
     </div>
   </section>
