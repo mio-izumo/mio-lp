@@ -380,8 +380,6 @@ img.mio-img-err{visibility:hidden}
 .mio-s7 .mio-h2{margin-bottom:40px}
 .mio-s7 .mio-body+.mio-body{margin-top:26px} /* 弾A・正直ブロック（2026-09-16） */
 .mio-s7 .mio-price{margin-top:26px;letter-spacing:.08em} /* 本鑑定の価格（2026-09-16 本人指示・二重価格） */
-.mio-s7--mid{padding-top:72px;padding-bottom:88px} /* 実験① 中間CTA（2026-09-30 上司承認・判定10/4） */
-.mio-s7--mid .mio-cta{margin-top:36px}
 .mio-price-old{color:var(--mio-sub);font-size:16px;text-decoration:line-through;margin-right:12px}
 .mio-price-arrow{color:var(--mio-sub);font-size:14px;margin-right:12px}
 .mio-price-now{color:var(--mio-gold);font-size:27px;font-weight:500;letter-spacing:.06em}
@@ -664,13 +662,6 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
     <p class="mio-note mio-fade"><span class="mio-nb">※実際に</span><span class="mio-nb">お受け取りになった方より、</span><span class="mio-nb">掲載の許可をいただいて</span><span class="mio-nb">紹介しています。</span></p>
   </section>
 
-  <!-- 実験①（2026-09-30 上司承認／本人裁定: 価格再掲なし＝ボタン単体・価格関所はs7に一任）: 中間CTA＝s5声の直後（判定10/4） -->
-  <section class="mio-s7 mio-s7--mid" id="mio-s7-mid">
-    <div class="mio-inner">
-      <a class="mio-cta" id="mio-mid-cta" href="https://lin.ee/tlTM2Vw">澪の無料霊視を受け取る<span class="mio-cta-sub">※本気の方だけお進みください</span></a>
-    </div>
-  </section>
-
   <!-- どう変わるか -->
   <section class="mio-s6" id="mio-s6">
     <div class="mio-s6-photo">
@@ -768,7 +759,7 @@ src="https://www.facebook.com/tr?id=1662087205074956&ev=PageView&noscript=1"
   Array.prototype.forEach.call(document.querySelectorAll('.mio-cta'), function(a){
     a.addEventListener('click', function(){
       if(typeof fbq==='function'){
-        fbq('track','Lead',{content_name: a.id==='mio-mid-cta' ? 'mid' : 'last'});
+        fbq('track','Lead',{content_name: a.closest('#mio-float') ? 'float' : 'last'});
       }
     });
   });
