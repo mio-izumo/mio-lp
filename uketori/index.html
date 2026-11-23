@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>澪からのお届け</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sumi:#121013; --sumi2:#1c1916; --kinari:#f0e8d8; --sub:#b8a98e;
+  --gold:#E7C24B; --green:#06C755; --line:rgba(240,232,216,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:"Shippori Mincho B1","Hiragino Mincho ProN",serif;
+  color:var(--kinari); background:#0d0b0e; line-height:1.9; letter-spacing:.04em;
+}
+.page{max-width:430px;margin:0 auto;min-height:100vh;background:var(--sumi);
+  border-left:1px solid var(--line);border-right:1px solid var(--line);
+  display:flex;flex-direction:column}
+
+/* 上の帯（DMの見出しの形） */
+.head{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;
+  padding:12px 16px;background:rgba(18,16,19,.96);border-bottom:1px solid var(--line)}
+.head img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid rgba(231,194,75,.5)}
+.head b{font-weight:500;font-size:17px;display:block;line-height:1.3}
+.head span{font-size:12px;color:var(--sub)}
+
+/* 今DMで送れないことのお知らせ */
+.notice{margin:16px 16px 4px;padding:12px 14px;border:1px solid rgba(231,194,75,.35);
+  border-radius:10px;font-size:14px;color:var(--sub);line-height:1.8;text-align:center;white-space:pre-line}
+
+.chat{flex:1;padding:12px 16px 24px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;gap:8px;align-items:flex-end;opacity:0;transform:translateY(8px);
+  transition:opacity .45s ease,transform .45s ease}
+.row.show{opacity:1;transform:none}
+.row img.av{width:28px;height:28px;border-radius:50%;object-fit:cover;flex:none}
+.bubble{max-width:82%;padding:14px 16px;border-radius:18px;font-size:17px;white-space:pre-wrap;word-break:break-word}
+.mio .bubble{background:var(--sumi2);border:1px solid var(--line);border-bottom-left-radius:6px}
+.me{justify-content:flex-end}
+.me .bubble{background:var(--gold);color:#1a1408;font-weight:500;border-bottom-right-radius:6px}
+
+/* 入力中の点 */
+.dots{display:inline-flex;gap:5px;padding:16px 18px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--sub);animation:b 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,60%,100%{opacity:.3}30%{opacity:1}}
+
+/* パネル（DMのボタン付きカードの形） */
+.panel{max-width:82%;border-radius:16px;overflow:hidden;background:var(--sumi2);border:1px solid var(--line)}
+.panel img{display:block;width:100%;aspect-ratio:1.91/1;object-fit:cover;background:#222}
+.panel .t{padding:12px 16px 4px;font-size:16px;font-weight:500}
+.panel a{display:block;margin:8px 12px 14px;padding:14px 10px;border-radius:10px;text-align:center;
+  background:var(--green);color:#fff;font-size:17px;font-weight:500;text-decoration:none;letter-spacing:.06em}
+
+/* 下の返事ボタン（1通目への返事の代わり） */
+.reply{position:sticky;bottom:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+  background:rgba(18,16,19,.97);border-top:1px solid var(--line);text-align:center;
+  opacity:0;transition:opacity .45s ease}
+.reply.show{opacity:1}
+.reply button{width:100%;padding:16px;border:0;border-radius:999px;background:var(--gold);color:#1a1408;
+  font-family:inherit;font-size:18px;font-weight:500;letter-spacing:.1em;cursor:pointer}
+.reply small{display:block;margin-top:8px;font-size:12px;color:var(--sub)}
+.reply.gone{display:none}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <img src="../img/profile.jpg" alt="">
+    <div><b>澪</b><span>出雲の霊視</span></div>
+  </div>
+
+  <p class="notice" id="notice"></p>
+
+  <div class="chat" id="chat"></div>
+
+  <div class="reply" id="reply">
+    <button type="button" id="send"></button>
+    <small>押すと、続きがこの画面に届きます</small>
+  </div>
+</div>
+
+<script>
+/* ===== 投稿ごとの中身（自動返信の1通目・2通目をそのまま写す） =====
+   ?p=<名前> で切り替え。無ければ一番上を使う。{ユーザー名}様 は名前が分からないので外す */
+var POSTS = {
+  '1121': {
+    keyword: '残ります',
+    msg1: '⚠️閉じる前に、これだけは読んでください。\nあなたの縁が、このままだと11月22日を境に来年の席から外されます。\n\nあなたの縁が、どこで外されかけているのか。\n11月22日までに、何をすればいいのか。\n\n「残ります」と送っていただければ、\n視えたものをそのままお届けします。\n\n縁が外されかけているのは、\nあなたが弱いからではありません。\n場の空気を先に読んで\nここまで来たからです。\n\n11月22日を過ぎると、来年の席は決まり終わります。\n次に席が空くのがいつかは、\n私にも視えません。\n\n「残ります」と、お待ちしています。',
+    msg2: 'あなたの縁は、まだ\n来年の席に残れるところにあります。\n11月22日までなら、\n間に合います。\n\n下のボタンを押すと、\n澪から最初のお伺いが届きます。\nそこに書いてくださったことを、\n私が一人で読んで視ます。\n\n押さずに閉じると、\nあなたの縁は席の外に置かれたまま一年が過ぎます。\n\n届いた順にお返ししています。',
+    panel: { img: 'https://ig-autoreply.pages.dev/img/6wtfV8ZfpX4P', title: 'こちらでお待ちしています',
+             button: '澪のお伺いを受け取る', url: 'https://lin.ee/tlTM2Vw' }
+  }
+};
+var NOTICE = 'ただいま、お一人ずつのメッセージでのお届けを休ませていただいています。\nメッセージと同じものを、こちらでお渡しします。';
+
+var key = new URLSearchParams(location.search).get('p');
+var P = POSTS[key] || POSTS[Object.keys(POSTS)[0]];
+var chat = document.getElementById('chat');
+var reply = document.getElementById('reply');
+document.getElementById('notice').textContent = NOTICE;
+document.getElementById('send').textContent = '「' + P.keyword + '」と送る';
+
+function add(node, who){
+  var row = document.createElement('div');
+  row.className = 'row ' + who;
+  if (who === 'mio') { var av = document.createElement('img'); av.className = 'av'; av.src = '../img/profile.jpg'; av.alt = ''; row.appendChild(av); }
+  row.appendChild(node);
+  chat.appendChild(row);
+  requestAnimationFrame(function(){ row.classList.add('show'); });
+  // 長い文は頭から読めるように、届いた吹き出しの頭を見出しのすぐ下に合わせる（最初の1通目は動かさない）
+  if (chat.children.length > 1) setTimeout(function(){
+    var y = row.getBoundingClientRect().top + window.scrollY - 76;
+    if (y > window.scrollY) window.scrollTo({top: y, behavior: 'smooth'});
+  }, 50);
+  return row;
+}
+function bubble(text){ var b = document.createElement('div'); b.className = 'bubble'; b.textContent = text; return b; }
+function typing(ms, then){
+  var d = document.createElement('div'); d.className = 'bubble dots'; d.innerHTML = '<i></i><i></i><i></i>';
+  var row = add(d, 'mio');
+  setTimeout(function(){ row.remove(); then(); }, ms);
+}
+
+// 1通目：開いて少し置いてから届く
+typing(900, function(){
+  add(bubble(P.msg1), 'mio');
+  setTimeout(function(){ reply.classList.add('show'); }, 600);
+});
+
+// 返事を押す → 2通目 → パネル
+document.getElementById('send').addEventListener('click', function(){
+  reply.classList.add('gone');
+  add(bubble(P.keyword), 'me');
+  typing(1400, function(){
+    add(bubble(P.msg2), 'mio');
+    typing(900, function(){
+      var p = document.createElement('div'); p.className = 'panel';
+      p.innerHTML = '<img alt=""><div class="t"></div><a></a>';
+      p.querySelector('img').src = P.panel.img;
+      p.querySelector('.t').textContent = P.panel.title;
+      var a = p.querySelector('a'); a.href = P.panel.url; a.textContent = P.panel.button;
+      add(p, 'mio');
+    });
+  });
+});
+// 見た目の確かめ用：?auto=1 で返事を自動で押す
+if (new URLSearchParams(location.search).get('auto')) setTimeout(function(){ document.getElementById('send').click(); }, 2000);
+</script>
+</body>
+</html>
