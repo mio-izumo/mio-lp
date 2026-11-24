@@ -39,7 +39,7 @@ body{
   transition:opacity .45s ease,transform .45s ease}
 .row.show{opacity:1;transform:none}
 .row img.av{width:28px;height:28px;border-radius:50%;object-fit:cover;flex:none}
-.bubble{max-width:82%;padding:14px 16px;border-radius:18px;font-size:17px;white-space:pre-wrap;word-break:break-word}
+.bubble{max-width:86%;padding:14px 14px;letter-spacing:.02em;border-radius:18px;font-size:17px;white-space:pre-wrap;word-break:break-word}
 .mio .bubble{background:var(--sumi2);border:1px solid var(--line);border-bottom-left-radius:6px}
 .me{justify-content:flex-end}
 .me .bubble{background:var(--gold);color:#1a1408;font-weight:500;border-bottom-right-radius:6px}
@@ -86,24 +86,27 @@ body{
 </div>
 
 <script>
-/* ===== 投稿ごとの中身（自動返信の1通目・2通目をそのまま写す） =====
-   ?p=<名前> で切り替え。無ければ一番上を使う。{ユーザー名}様 は名前が分からないので外す */
-var POSTS = {
-  '1121': {
-    keyword: '残ります',
-    msg1: '⚠️閉じる前に、これだけは読んでください。\nあなたの縁が、このままだと11月22日を境に来年の席から外されます。\n\nあなたの縁が、どこで外されかけているのか。\n11月22日までに、何をすればいいのか。\n\n「残ります」と送っていただければ、\n視えたものをそのままお届けします。\n\n縁が外されかけているのは、\nあなたが弱いからではありません。\n場の空気を先に読んで\nここまで来たからです。\n\n11月22日を過ぎると、来年の席は決まり終わります。\n次に席が空くのがいつかは、\n私にも視えません。\n\n「残ります」と、お待ちしています。',
-    msg2: 'あなたの縁は、まだ\n来年の席に残れるところにあります。\n11月22日までなら、\n間に合います。\n\n下のボタンを押すと、\n澪から最初のお伺いが届きます。\nそこに書いてくださったことを、\n私が一人で読んで視ます。\n\n押さずに閉じると、\nあなたの縁は席の外に置かれたまま一年が過ぎます。\n\n届いた順にお返ししています。',
+/* ===== 中身（プロフィールのリンクは1つなので、日付で切り替える） =====
+   from（その日の0時から）が今日以前のうち、いちばん新しいものを出す。作り置きのたびに1件足す。
+   ?p=<from> でその日の分を見られる（確かめ用）。 */
+var POSTS = [
+  { from: '2026-11-25',
+    keyword: '受け取ります',
+    msg1: '⚠️閉じる前に、\nこれだけは読んでください。\n\n今年結んだ縁は、\n11月28日を過ぎると\n結び目が固まります。\nゆるみかけた縁は、\nそのままほどけていくのです。\n\nあなたの縁が、\nどこでゆるみかけているのか。\n誰との縁を手放し、\n誰との縁を\n結び直せばいいのか。\n\n「受け取ります」と\n送っていただければ、\n視えたものを\nそのままお届けします。\n\n縁がゆるみかけているのは、\nあなたが冷たいから\nではありません。\n誰かの気持ちを先に守って\nここまで来たからです。\n\n「受け取ります」と、\nお待ちしています。',
+    msg2: 'あなたの縁は、まだ\n結び直せるところにあります。\n11月28日までなら、\n間に合います。\n\n下のボタンを押すと、\n澪から最初のお伺いが\n届きます。\nいただいたお返事は、\n私が一人で読んで視ます。\n\n押さずに閉じると、\nゆるんだ縁は\nほどけたまま一年が過ぎます。\n\n届いた順にお返ししています。',
     panel: { img: 'https://ig-autoreply.pages.dev/img/6wtfV8ZfpX4P', title: 'こちらでお待ちしています',
-             button: '澪のお伺いを受け取る', url: 'https://lin.ee/tlTM2Vw' }
-  }
-};
-var NOTICE = 'ただいま、お一人ずつのメッセージでのお届けを休ませていただいています。\nメッセージと同じものを、こちらでお渡しします。';
+             button: '澪のお伺いを受け取る', url: 'https://lin.ee/tlTM2Vw' } }
+];
+var NOTICE = '';
 
+function today(){ var d = new Date(Date.now() + 9*3600*1000); return d.toISOString().slice(0,10); }   // 日本の日付
 var key = new URLSearchParams(location.search).get('p');
-var P = POSTS[key] || POSTS[Object.keys(POSTS)[0]];
+var P = POSTS.filter(function(x){ return x.from === key; })[0]
+     || POSTS.filter(function(x){ return x.from <= today(); }).sort(function(a,b){ return a.from < b.from ? 1 : -1; })[0]
+     || POSTS[0];
 var chat = document.getElementById('chat');
 var reply = document.getElementById('reply');
-document.getElementById('notice').textContent = NOTICE;
+var nt = document.getElementById('notice'); if (NOTICE) nt.textContent = NOTICE; else nt.remove();
 document.getElementById('send').textContent = '「' + P.keyword + '」と送る';
 
 function add(node, who){
