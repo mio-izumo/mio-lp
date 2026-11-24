@@ -78,7 +78,7 @@ body{
 <body>
 <div class="page">
   <div class="head">
-    <img src="../img/profile.jpg" alt="">
+    <img src="img/icon.jpg" alt="">
     <div><b>澪</b><span>出雲の霊視</span></div>
   </div>
 
@@ -96,39 +96,60 @@ body{
 </div>
 
 <script>
-/* ===== 中身（プロフィールのリンクは1つなので、日付で切り替える） =====
-   from（その日の0時から）が今日以前のうち、いちばん新しいものを出す。作り置きのたびに1件足す。
-   ?p=<from> でその日の分を見られる（確かめ用）。 */
+/* ===== 受け取りページ（プロフィールのリンク）=====
+   開く → 案内（全員同じ・短く）→ 投稿で伝えた言葉を打って送る → その投稿の1通目・2通目 → LINEのボタン
+   POSTS に投稿ごとに1件足す（kw＝投稿の締めで「送ってください」と言う言葉）。合わない言葉は FALLBACK（最新のフィード）。
+   計測：/log に open・send（k＝当たった投稿）・line。?auto・?p を付けたときは数えない。 */
+var GREET = '澪です。\nここまで来てくださって、\nありがとうございます。\n\n投稿でお伝えした言葉を、\n下の欄から送ってください。\nあなたが見た投稿に合わせて、\nお届けします。';
+var PANEL = { img: 'https://ig-autoreply.pages.dev/img/6wtfV8ZfpX4P', title: 'こちらでお待ちしています',
+              button: '澪のお伺いを受け取る', url: 'https://lin.ee/tlTM2Vw' };
 var POSTS = [
-  { from: '2026-11-25',
-    keyword: '受け取ります',
-    msg1: '⚠️閉じる前に、\nこれだけは読んでください。\n\n今年結んだ縁は、\n11月28日を過ぎると\n結び目が固まります。\nゆるみかけた縁は、\nそのままほどけていくのです。\n\nあなたの縁が、\nどこでゆるみかけているのか。\n誰との縁を手放し、\n誰との縁を\n結び直せばいいのか。\n\n下の欄に「受け取ります」と\n送っていただければ、\n視えたものを\nそのままお届けします。\n\n縁がゆるみかけているのは、\nあなたが冷たいから\nではありません。\n誰かの気持ちを先に守って\nここまで来たからです。\n\n「受け取ります」と、\nお待ちしています。',
-    msg2: 'あなたの縁は、まだ\n結び直せるところにあります。\n11月28日までなら、\n間に合います。\n\n下のボタンを押すと、\n澪から最初のお伺いが\n届きます。\nいただいたお返事は、\n私が一人で読んで視ます。\n\n押さずに閉じると、\nゆるんだ縁は\nほどけたまま一年が過ぎます。\n\n届いた順にお返ししています。',
-    panel: { img: 'https://ig-autoreply.pages.dev/img/6wtfV8ZfpX4P', title: 'こちらでお待ちしています',
-             button: '澪のお伺いを受け取る', url: 'https://lin.ee/tlTM2Vw' } }
+  { key: '1125f', from: '2026-11-25', type: 'feed', kw: ['結び直します', '結び直す'],
+    msg1: 'お言葉、受け取りました。\n\n今年結んだ縁は、\n11月28日を過ぎると\n結び目が固まります。\nゆるみかけた縁は、\nそのままほどけていくのです。\n\n縁がゆるみかけているのは、\nあなたが冷たいから\nではありません。\n誰かの気持ちを先に守って\nここまで来たからです。',
+    msg2: 'あなたの縁は、まだ\n結び直せるところにあります。\n11月28日までなら、\n間に合います。\n\n下のボタンを押すと、\n澪から最初のお伺いが\n届きます。\nいただいたお返事を、\n私が一人で読んで視ます。\n\n押さずに閉じると、\nゆるんだ縁は\nほどけたまま一年が過ぎます。' },
+  { key: '1125r', from: '2026-11-25', type: 'reel', kw: ['断ち切ります', '断ち切る'],
+    msg1: 'お言葉、受け取りました。\n\n切ったはずの悪縁は、\n十二月に入ると一度だけ\n戻ってこようとすると\n言われています。\n\nあなたを疲れさせている縁が、\n家族なのか、職場なのか。\n誰との縁が重いのかは、\n人によってまるで違います。',
+    msg2: '正体が分からないまま\n十二月を迎えると、\n同じ人に、\nまた一年振り回されます。\n\n重い縁を手放せるのは、\n正体が見えた人だけです。\n\n下のボタンを押すと、\n澪から最初のお伺いが\n届きます。\nいただいたお返事を、\n私が一人で読んで視ます。' }
 ];
-var NOTICE = '';
 
-function today(){ var d = new Date(Date.now() + 9*3600*1000); return d.toISOString().slice(0,10); }   // 日本の日付
-var key = new URLSearchParams(location.search).get('p');
-var P = POSTS.filter(function(x){ return x.from === key; })[0]
-     || POSTS.filter(function(x){ return x.from <= today(); }).sort(function(a,b){ return a.from < b.from ? 1 : -1; })[0]
-     || POSTS[0];
+function today(){ return new Date(Date.now() + 9*3600*1000).toISOString().slice(0,10); }   // 日本の日付
+var Q = new URLSearchParams(location.search);
+var TEST = Q.get('auto') || Q.get('p');
+var live = POSTS.filter(function(x){ return x.from <= today(); });
+if (!live.length) live = POSTS.slice();
+var FALLBACK = live.filter(function(x){ return x.type === 'feed'; }).sort(function(a,b){ return a.from < b.from ? 1 : -1; })[0] || live[0];
+function norm(t){ return t.replace(/[\s　「」『』。、！!？?・]/g, ''); }
+function pick(t){
+  var n = norm(t);
+  for (var i = live.length - 1; i >= 0; i--) {
+    for (var j = 0; j < live[i].kw.length; j++) { var k = norm(live[i].kw[j]); if (n.indexOf(k) >= 0 || (n.length >= 2 && k.indexOf(n) === 0)) return live[i]; }
+  }
+  return null;
+}
+
+var VID = (function(){ try { var v = localStorage.getItem('vid'); if (!v) { v = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('vid', v); } return v; } catch (e) { return 'x' + Math.random().toString(36).slice(2); } })();
+function log(ev, k){
+  if (TEST) return;
+  var body = JSON.stringify({ ev: ev, k: k || '', v: VID });
+  try { if (navigator.sendBeacon && navigator.sendBeacon('/log', new Blob([body], {type: 'application/json'}))) return; } catch (e) {}
+  try { fetch('/log', { method: 'POST', body: body, headers: {'Content-Type': 'application/json'}, keepalive: true }); } catch (e) {}
+}
+
 var chat = document.getElementById('chat');
 var reply = document.getElementById('reply');
-var nt = document.getElementById('notice'); if (NOTICE) nt.textContent = NOTICE; else nt.remove();
 var input = document.getElementById('msg');
-input.placeholder = '「' + P.keyword + '」と入力';
-document.getElementById('hint').textContent = '「' + P.keyword + '」と入力して送ってください';
+var nt = document.getElementById('notice'); if (nt) nt.remove();
+input.placeholder = '投稿の言葉を入力';
+document.getElementById('hint').textContent = '投稿でお伝えした言葉を送ってください';
 
 function add(node, who){
   var row = document.createElement('div');
   row.className = 'row ' + who;
-  if (who === 'mio') { var av = document.createElement('img'); av.className = 'av'; av.src = '../img/profile.jpg'; av.alt = ''; row.appendChild(av); }
+  if (who === 'mio') { var av = document.createElement('img'); av.className = 'av'; av.src = 'img/icon.jpg'; av.alt = ''; row.appendChild(av); }
   row.appendChild(node);
   chat.appendChild(row);
   requestAnimationFrame(function(){ row.classList.add('show'); });
-  // 長い文は頭から読めるように、届いた吹き出しの頭を見出しのすぐ下に合わせる（最初の1通目は動かさない）
+  // 長い文は頭から読めるように、届いた吹き出しの頭を見出しのすぐ下に合わせる（最初の案内は動かさない）
   if (chat.children.length > 1) setTimeout(function(){
     var y = row.getBoundingClientRect().top + window.scrollY - 76;
     if (y > window.scrollY) window.scrollTo({top: y, behavior: 'smooth'});
@@ -142,34 +163,40 @@ function typing(ms, then){
   setTimeout(function(){ row.remove(); then(); }, ms);
 }
 
-// 1通目：開いて少し置いてから届く
+log('open');
 typing(900, function(){
-  add(bubble(P.msg1), 'mio');
+  add(bubble(GREET), 'mio');
   setTimeout(function(){ reply.classList.add('show'); }, 600);
 });
 
-// 言葉を打って送る → 2通目 → パネル（打ち間違いでも止めない＝空でなければ通す）
+// 言葉を打って送る → その投稿の1通目 → 2通目 → LINEのボタン（合わない言葉でも止めない）
 document.getElementById('form').addEventListener('submit', function(e){
   e.preventDefault();
   var t = input.value.trim();
   if (!t) { reply.classList.add('shake'); setTimeout(function(){ reply.classList.remove('shake'); }, 400); input.focus(); return; }
   input.blur();
   reply.classList.add('gone');
+  var P = pick(t) || FALLBACK;
+  log('send', pick(t) ? P.key : 'other');
   add(bubble(t), 'me');
   typing(1400, function(){
-    add(bubble(P.msg2), 'mio');
-    typing(900, function(){
-      var p = document.createElement('div'); p.className = 'panel';
-      p.innerHTML = '<img alt=""><div class="t"></div><a></a>';
-      p.querySelector('img').src = P.panel.img;
-      p.querySelector('.t').textContent = P.panel.title;
-      var a = p.querySelector('a'); a.href = P.panel.url; a.textContent = P.panel.button;
-      add(p, 'mio');
+    add(bubble(P.msg1), 'mio');
+    typing(1600, function(){
+      add(bubble(P.msg2), 'mio');
+      typing(900, function(){
+        var p = document.createElement('div'); p.className = 'panel';
+        p.innerHTML = '<img alt=""><div class="t"></div><a></a>';
+        p.querySelector('img').src = PANEL.img;
+        p.querySelector('.t').textContent = PANEL.title;
+        var a = p.querySelector('a'); a.href = PANEL.url; a.textContent = PANEL.button;
+        a.addEventListener('click', function(){ log('line', P.key); });
+        add(p, 'mio');
+      });
     });
   });
 });
-// 見た目の確かめ用：?auto=1 で返事を自動で押す
-if (new URLSearchParams(location.search).get('auto')) setTimeout(function(){ input.value = P.keyword; document.getElementById('form').requestSubmit(); }, 2000);
+// 見た目の確かめ用：?auto=<言葉> で自動で送る（数えない）
+if (Q.get('auto')) setTimeout(function(){ input.value = Q.get('auto') === '1' ? '結び直します' : Q.get('auto'); document.getElementById('form').requestSubmit(); }, 2000);
 </script>
 </body>
 </html>

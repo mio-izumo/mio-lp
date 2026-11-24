@@ -1,0 +1,8 @@
+name = "mio-izumo"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "mio-izumo-log"
+database_id = "05815746-44f1-4453-8fe7-26275b6c3f7c"
