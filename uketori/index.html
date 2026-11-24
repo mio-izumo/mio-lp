@@ -62,9 +62,16 @@ body{
   background:rgba(18,16,19,.97);border-top:1px solid var(--line);text-align:center;
   opacity:0;transition:opacity .45s ease}
 .reply.show{opacity:1}
-.reply button{width:100%;padding:16px;border:0;border-radius:999px;background:var(--gold);color:#1a1408;
-  font-family:inherit;font-size:18px;font-weight:500;letter-spacing:.1em;cursor:pointer}
-.reply small{display:block;margin-top:8px;font-size:12px;color:var(--sub)}
+.reply small{display:block;margin-bottom:8px;font-size:13px;color:var(--sub)}
+.reply form{display:flex;gap:8px;align-items:center}
+.reply input{flex:1;min-width:0;padding:13px 16px;border:1px solid rgba(231,194,75,.55);border-radius:999px;
+  background:#0d0b0e;color:var(--kinari);font-family:inherit;font-size:17px;outline:none}
+.reply input::placeholder{color:#7d725f}
+.reply input:focus{border-color:var(--gold)}
+.reply button{flex:none;padding:13px 20px;border:0;border-radius:999px;background:var(--gold);color:#1a1408;
+  font-family:inherit;font-size:17px;font-weight:500;letter-spacing:.08em;cursor:pointer}
+.reply.shake input{animation:sh .35s}
+@keyframes sh{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 .reply.gone{display:none}
 </style>
 </head>
@@ -80,8 +87,11 @@ body{
   <div class="chat" id="chat"></div>
 
   <div class="reply" id="reply">
-    <button type="button" id="send"></button>
-    <small>押すと、続きがこの画面に届きます</small>
+    <small id="hint"></small>
+    <form id="form" autocomplete="off">
+      <input id="msg" type="text" enterkeyhint="send" aria-label="メッセージ">
+      <button type="submit">送信</button>
+    </form>
   </div>
 </div>
 
@@ -92,7 +102,7 @@ body{
 var POSTS = [
   { from: '2026-11-25',
     keyword: '受け取ります',
-    msg1: '⚠️閉じる前に、\nこれだけは読んでください。\n\n今年結んだ縁は、\n11月28日を過ぎると\n結び目が固まります。\nゆるみかけた縁は、\nそのままほどけていくのです。\n\nあなたの縁が、\nどこでゆるみかけているのか。\n誰との縁を手放し、\n誰との縁を\n結び直せばいいのか。\n\n「受け取ります」と\n送っていただければ、\n視えたものを\nそのままお届けします。\n\n縁がゆるみかけているのは、\nあなたが冷たいから\nではありません。\n誰かの気持ちを先に守って\nここまで来たからです。\n\n「受け取ります」と、\nお待ちしています。',
+    msg1: '⚠️閉じる前に、\nこれだけは読んでください。\n\n今年結んだ縁は、\n11月28日を過ぎると\n結び目が固まります。\nゆるみかけた縁は、\nそのままほどけていくのです。\n\nあなたの縁が、\nどこでゆるみかけているのか。\n誰との縁を手放し、\n誰との縁を\n結び直せばいいのか。\n\n下の欄に「受け取ります」と\n送っていただければ、\n視えたものを\nそのままお届けします。\n\n縁がゆるみかけているのは、\nあなたが冷たいから\nではありません。\n誰かの気持ちを先に守って\nここまで来たからです。\n\n「受け取ります」と、\nお待ちしています。',
     msg2: 'あなたの縁は、まだ\n結び直せるところにあります。\n11月28日までなら、\n間に合います。\n\n下のボタンを押すと、\n澪から最初のお伺いが\n届きます。\nいただいたお返事は、\n私が一人で読んで視ます。\n\n押さずに閉じると、\nゆるんだ縁は\nほどけたまま一年が過ぎます。\n\n届いた順にお返ししています。',
     panel: { img: 'https://ig-autoreply.pages.dev/img/6wtfV8ZfpX4P', title: 'こちらでお待ちしています',
              button: '澪のお伺いを受け取る', url: 'https://lin.ee/tlTM2Vw' } }
@@ -107,7 +117,9 @@ var P = POSTS.filter(function(x){ return x.from === key; })[0]
 var chat = document.getElementById('chat');
 var reply = document.getElementById('reply');
 var nt = document.getElementById('notice'); if (NOTICE) nt.textContent = NOTICE; else nt.remove();
-document.getElementById('send').textContent = '「' + P.keyword + '」と送る';
+var input = document.getElementById('msg');
+input.placeholder = '「' + P.keyword + '」と入力';
+document.getElementById('hint').textContent = '「' + P.keyword + '」と入力して送ってください';
 
 function add(node, who){
   var row = document.createElement('div');
@@ -136,10 +148,14 @@ typing(900, function(){
   setTimeout(function(){ reply.classList.add('show'); }, 600);
 });
 
-// 返事を押す → 2通目 → パネル
-document.getElementById('send').addEventListener('click', function(){
+// 言葉を打って送る → 2通目 → パネル（打ち間違いでも止めない＝空でなければ通す）
+document.getElementById('form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var t = input.value.trim();
+  if (!t) { reply.classList.add('shake'); setTimeout(function(){ reply.classList.remove('shake'); }, 400); input.focus(); return; }
+  input.blur();
   reply.classList.add('gone');
-  add(bubble(P.keyword), 'me');
+  add(bubble(t), 'me');
   typing(1400, function(){
     add(bubble(P.msg2), 'mio');
     typing(900, function(){
@@ -153,7 +169,7 @@ document.getElementById('send').addEventListener('click', function(){
   });
 });
 // 見た目の確かめ用：?auto=1 で返事を自動で押す
-if (new URLSearchParams(location.search).get('auto')) setTimeout(function(){ document.getElementById('send').click(); }, 2000);
+if (new URLSearchParams(location.search).get('auto')) setTimeout(function(){ input.value = P.keyword; document.getElementById('form').requestSubmit(); }, 2000);
 </script>
 </body>
 </html>
