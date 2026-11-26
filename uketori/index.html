@@ -51,9 +51,10 @@ body{
 @keyframes b{0%,60%,100%{opacity:.3}30%{opacity:1}}
 
 /* パネル（DMのボタン付きカードの形） */
-.panel{max-width:82%;border-radius:16px;overflow:hidden;background:var(--sumi2);border:1px solid var(--line)}
+.panel{max-width:94%;border-radius:16px;overflow:hidden;background:var(--sumi2);border:1px solid var(--line)}
 .panel img{display:block;width:100%;aspect-ratio:1.91/1;object-fit:cover;background:#222}
-.panel .t{padding:12px 16px 4px;font-size:16px;font-weight:500}
+.panel .t{padding:14px 16px 2px;font-size:20px;font-weight:700;line-height:1.45;color:#fff}
+.panel .s{padding:2px 16px 4px;font-size:17px;font-weight:600;color:var(--gold,#e7c24b);letter-spacing:.08em}
 .panel a{display:block;margin:8px 12px 14px;padding:14px 10px;border-radius:10px;text-align:center;
   background:var(--green);color:#fff;font-size:17px;font-weight:500;text-decoration:none;letter-spacing:.06em}
 
@@ -101,7 +102,7 @@ body{
    POSTS に投稿ごとに1件足す（kw＝投稿の締めで「送ってください」と言う言葉）。合わない言葉は FALLBACK（最新のフィード）。
    計測：/log に open・send（k＝当たった投稿）・line。?auto・?p を付けたときは数えない。 */
 var GREET = '澪です。\nここを開いてくださって、\nありがとうございます。\n\nあなたを疲れさせている縁が、\nもうすぐ近くまで来ています。\n\nしかし、\nこのまま閉じてしまうと、\n誰なのか分からないまま\n十二月に入ってしまいます。\n\n今、投稿で見た言葉を\n下の欄から送ってください。\nあなたの縁を、\n出雲から視てまいります。';
-var PANEL = { img: 'https://ig-autoreply.pages.dev/img/6wtfV8ZfpX4P', title: 'こちらでお待ちしています',
+var PANEL = { img: 'https://ig-autoreply.pages.dev/img/6wtfV8ZfpX4P', title: '何度占っても変わらなかったあなたへ', sub: '出雲式無料鑑定',
               button: '澪のお伺いを受け取る', url: 'https://lin.ee/tlTM2Vw' };
 var POSTS = [
   { key: 'shiru', from: '2026-11-24', type: 'any', kw: ['知る', 'しる', '知り', '視る', 'みる'], kw2: '知ります',
@@ -147,7 +148,7 @@ function log(ev, k){
   if (TEST) return;
   var body = JSON.stringify({ ev: ev, k: k || '', v: VID });
   // GitHub Pages の写し（mio-izumo.github.io）から開かれても、記録は Cloudflare（mio-izumo.pages.dev）へ送る。text/plain は別のドメインへもそのまま届く
-  var URL_LOG = location.hostname === 'mio-izumo.pages.dev' ? '/log' : 'https://mio-izumo.pages.dev/log';
+  var URL_LOG = location.hostname === 'mio-izumo-axf.pages.dev' ? '/log' : 'https://mio-izumo-axf.pages.dev/log'; // 11/26 会社のCloudflareへ移った
   try { if (navigator.sendBeacon && navigator.sendBeacon(URL_LOG, new Blob([body], {type: 'text/plain'}))) return; } catch (e) {}
   try { fetch(URL_LOG, { method: 'POST', body: body, mode: 'no-cors', headers: {'Content-Type': 'text/plain'}, keepalive: true }); } catch (e) {}
 }
@@ -157,7 +158,7 @@ var reply = document.getElementById('reply');
 var input = document.getElementById('msg');
 var nt = document.getElementById('notice'); if (nt) nt.remove();
 input.placeholder = '投稿の言葉を入力';
-document.getElementById('hint').textContent = '投稿でお伝えした言葉を送ってください';
+document.getElementById('hint').textContent = '';
 
 function add(node, who){
   var row = document.createElement('div');
@@ -190,13 +191,13 @@ typing(900, function(){
 // 合わない言葉でも止めない（1回目は FALLBACK、2回目は何でも通す）
 var step = 1, P = null;
 function showReply(hint){ input.value = ''; input.placeholder = hint ? '「' + hint + '」と入力' : '投稿の言葉を入力';
-  document.getElementById('hint').textContent = hint ? '「' + hint + '」と入力して送ってください' : '投稿でお伝えした言葉を送ってください';
+  document.getElementById('hint').textContent = '';
   reply.classList.remove('gone'); setTimeout(function(){ reply.classList.add('show'); }, 600); }
 function panel(){
   var p = document.createElement('div'); p.className = 'panel';
-  p.innerHTML = '<img alt=""><div class="t"></div><a></a>';
+  p.innerHTML = '<img alt=""><div class="t"></div><div class="s"></div><a></a>';
   p.querySelector('img').src = PANEL.img;
-  p.querySelector('.t').textContent = PANEL.title;
+  p.querySelector('.t').textContent = PANEL.title; p.querySelector('.s').textContent = PANEL.sub || '';
   var a = p.querySelector('a'); a.href = PANEL.url; a.textContent = PANEL.button;
   a.addEventListener('click', function(){ log('line', P.key); });
   add(p, 'mio');
